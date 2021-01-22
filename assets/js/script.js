@@ -132,7 +132,7 @@ $(".list-group").on("blur", "input[type='text']", function() {
   var taskSpan = $("<span>")
     .addClass("badge badge-primary badge-pill")
     .text(date);
-
+  
   // replace input with span element
   $(this).replaceWith(taskSpan);
 });
@@ -169,6 +169,51 @@ $("#task-form-modal .btn-primary").click(function() {
 
     saveTasks();
   }
+});
+
+//sorting
+$(".card .list-group").sortable({
+  connectWith: $(".card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  update: function(event) {
+    var tempArr = [];
+  
+    $(this).children().each(function() {
+      var text = $(this)
+        .find("p")
+        .text()
+        .trim();
+    
+      var date = $(this)
+        .find("span")
+        .text()
+        .trim();
+    
+      tempArr.push({
+        text: text,
+        date: date
+      });
+    });
+
+  // trim down list's ID to match object property
+  var arrName = $(this)
+  .attr("id")
+  .replace("list-", "");
+
+  // update array on tasks object and save
+  tasks[arrName] = tempArr;
+  saveTasks();
+    }
+});
+
+$("#trash").droppable({
+  accept: ".card .list-group-item",
+  tolerance: "touch",
+  drop: function(event, ui) {
+    ui.draggable.remove();
+  },
 });
 
 // remove all tasks
