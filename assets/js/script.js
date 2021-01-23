@@ -13,6 +13,13 @@ var createTask = function(taskText, taskDate, taskList) {
   // append span and p element to parent li
   taskLi.append(taskSpan, taskP);
 
+  //interval audit
+  setInterval(function () {
+    $(".card .list-group-item").each(function(index, el) {
+      auditTask(el);
+    });
+  }, 1800000);
+
   //audit taskli
   auditTask(taskLi);
 
@@ -217,6 +224,18 @@ $(".card .list-group").sortable({
   scroll: false,
   tolerance: "pointer",
   helper: "clone",
+  activate: function(event) {
+    $(this).addClass("dropover");
+  },
+  deactivate: function(event) {
+    $(this).removeClass("dropover");
+  },
+  over: function(event) {
+    $(this).addClass("dropoveractive");
+  },
+  out: function(event) {
+    $(this).removeClass("dropoveractive");
+  },
   update: function(event) {
     var tempArr = [];
   
@@ -253,7 +272,21 @@ $("#trash").droppable({
   tolerance: "touch",
   drop: function(event, ui) {
     ui.draggable.remove();
+    $(".bottom-trash").removeClass("bottom-trash-active");
   },
+  activate: function(event) {
+    $(".bottom-trash").addClass("bottom-trash-drag");
+  },
+  deactivate: function(event) {
+    $(".bottom-trash").removeClass("bottom-trash-drag");
+  },
+  over: function(event) {
+    $(".bottom-trash").addClass("bottom-trash-active");
+  },
+  out: function(event) {
+    $(".bottom-trash").removeClass("bottom-trash-active");
+  },
+
 });
 
 // remove all tasks
